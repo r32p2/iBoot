@@ -1,18 +1,28 @@
 CC = clang
-LD = llvm-ld
+LD = ld
+AS = as
+OBJCOPY = objcopy
 
 SUBMODULES = boot/ kernel/
 
-.PHONY: obj $(SUBMODULES)
+all: obj img flp
 
 obj: $(SUBMODULES)
 
 $(SUBMODULES):
 	$(MAKE) -C $@
 
-all: obj
+img:
+	$(LD) -T link.ld -o img.elf boot/entry.o
+	objcopy -O binary img.elf img.bin
 
-clean: $(SUBMODULES)
+flp:
+	dd if=/dev/zero of=disk.img bs=1024 count=1440
+	dd if=img.bin of=disk.img conv=notrunc 
 
-$(SUBMODULES):
-	$(MAKE) -C $@ clean
+.PHONY: obj $(SUBMODULES) clean
+
+clean:
+	rm img.bin
+	rm img.elf
+	rm -rf boot/*.o

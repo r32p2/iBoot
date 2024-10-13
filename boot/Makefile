@@ -1,15 +1,10 @@
-AS = as
 FILES = $(wildcard *.s)
 SOURCES = $(FILES:.s=)
+OUTPUT = $(FILES:.s=.o)
+
+all: boot.o
 
 boot.o: $(SOURCES)
 
 $(SOURCES):
 	$(AS) $@.s -o $@.o --32
-
-all: boot.o
-
-clean:
-	rm -rf *.o
-
-.PHONY: clean

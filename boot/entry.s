@@ -1,5 +1,5 @@
 .code16
-.text
+.section .boot
 _start:
 movw $0x7C00, %ax
 movw %ax, %sp
